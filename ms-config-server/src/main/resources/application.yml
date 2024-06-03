@@ -9,7 +9,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/DarkingNro10/proyectoclaseN.git # ruta del repositorio git
+          uri: https://github.com/DarkingNro10/ProyectoIntegradorCiclo5.git # ruta del repositorio git
           searchPaths: config-data
           default-label: main
           #username:
