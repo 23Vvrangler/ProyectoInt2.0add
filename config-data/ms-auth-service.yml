@@ -19,7 +19,7 @@ eureka:
   client:
     serviceUrl:
 
-      defaultZone: ${EUREKA_URI:http://localhost:9090/eureka}
+      defaultZone: ${EUREKA_URI:http://localhost:9070/eureka}
   instance:
 
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
