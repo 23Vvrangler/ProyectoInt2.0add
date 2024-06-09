@@ -36,10 +36,6 @@ public class PedidoServiceImpl implements PedidoService {
 
         Pedido pedido = pedidoRespository.findById(id).get();
         pedido.setClienteDto(clienteFeign.buscarPorId(pedido.getClienteId()).getBody());
-        /*for (PedidoDetalle pedidoDetalle : pedido.getDetalle()) {
-            pedidoDetalle.setProducto(productoFeign.buscarPorId(pedidoDetalle.getProductoId()).getBody());
-        }*/
-
         List<PedidoDetalle> pedidoDetalles = pedido.getDetalle().stream().map(pedidoDetalle -> {
             pedidoDetalle.setProducto(productoFeign.buscarPorId(pedidoDetalle.getProductoId()).getBody());
             return pedidoDetalle;

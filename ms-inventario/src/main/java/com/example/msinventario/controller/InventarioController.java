@@ -1,5 +1,6 @@
 package com.example.msinventario.controller;
 
+import com.example.msinventario.dto.ProductoDto;
 import com.example.msinventario.entity.Inventario;
 import com.example.msinventario.service.InventarioService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -16,7 +17,6 @@ public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
 
-    // Implementación del circuit breaker para el método buscarPorId
     @GetMapping("/{id}")
     @CircuitBreaker(name = "buscarPorIdCB", fallbackMethod = "buscarPorIdFallback")
     public ResponseEntity<Inventario> buscarPorId(@PathVariable Long id) {
@@ -26,12 +26,6 @@ public class InventarioController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    // Método de fallback para buscarPorId en caso de que el circuit breaker esté abierto o haya un error
-    public ResponseEntity<Inventario> buscarPorIdFallback(Long id, Throwable throwable) {
-        // Manejo del error o respuesta predeterminada
-        return ResponseEntity.notFound().build(); // Por ejemplo, devolver una respuesta not found
     }
 
     @GetMapping
@@ -54,6 +48,16 @@ public class InventarioController {
         }
     }
 
+    @GetMapping("/producto-info/{productoId}")
+    public ResponseEntity<ProductoDto> buscarProductoPorId(@PathVariable Integer productoId) {
+        ProductoDto producto = inventarioService.buscarProductoPorId(productoId);
+        if (producto != null) {
+            return ResponseEntity.ok(producto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Inventario> editar(@PathVariable Long id, @RequestBody Inventario inventario) {
         inventario.setId(id);
@@ -64,5 +68,10 @@ public class InventarioController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         inventarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Método de fallback para buscarPorId en caso de que el circuit breaker esté abierto o haya un error
+    public ResponseEntity<Inventario> buscarPorIdFallback(Long id, Throwable throwable) {
+        return ResponseEntity.notFound().build();
     }
 }

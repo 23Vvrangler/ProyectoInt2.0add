@@ -1,6 +1,8 @@
 package com.example.msinventario.service.impl;
 
+import com.example.msinventario.dto.ProductoDto;
 import com.example.msinventario.entity.Inventario;
+import com.example.msinventario.feing.ProductoFeing;
 import com.example.msinventario.repository.InventarioRepository;
 import com.example.msinventario.service.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,12 @@ import java.util.List;
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
+
     @Autowired
     private InventarioRepository inventarioRepository;
+
+    @Autowired
+    private ProductoFeing productoFeing;
 
     @Override
     public List<Inventario> listar() {
@@ -41,5 +47,10 @@ public class InventarioServiceImpl implements InventarioService {
     @Override
     public void eliminar(Long id) {
         inventarioRepository.deleteById(id);
+    }
+
+    @Override
+    public ProductoDto buscarProductoPorId(Integer id) {
+        return productoFeing.buscarPorId(id).getBody();
     }
 }
