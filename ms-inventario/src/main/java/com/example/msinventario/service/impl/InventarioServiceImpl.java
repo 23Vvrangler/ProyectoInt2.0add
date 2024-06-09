@@ -51,6 +51,13 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     public ProductoDto buscarProductoPorId(Integer id) {
-        return productoFeing.buscarPorId(id).getBody();
+        try {
+            ProductoDto producto = productoFeing.buscarPorId(id).getBody();
+            System.out.println("Producto obtenido: " + producto);
+            return producto;
+        } catch (Exception e) {
+            System.err.println("Error al obtener el producto: " + e.getMessage());
+            return null;
+        }
     }
 }
