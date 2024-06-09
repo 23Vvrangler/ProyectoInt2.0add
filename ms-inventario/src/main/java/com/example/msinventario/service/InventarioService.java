@@ -1,17 +1,17 @@
 package com.example.msinventario.service;
 
-import com.example.msinventario.dto.ProductoDto;
+import com.example.msinventario.dto.InventarioResponseDto;
 import com.example.msinventario.entity.Inventario;
+import com.example.msinventario.dto.ProductoDto;
 
 import java.util.List;
 
 public interface InventarioService {
-    List<Inventario> listar();
+    List<InventarioResponseDto> listar();
     Inventario guardar(Inventario inventario);
-    Inventario buscarPorId(Long id);
+    InventarioResponseDto buscarPorId(Long id);
     Inventario buscarPorProductoId(Long productoId);
     Inventario editar(Inventario inventario);
     void eliminar(Long id);
     ProductoDto buscarProductoPorId(Integer id);
-
 }

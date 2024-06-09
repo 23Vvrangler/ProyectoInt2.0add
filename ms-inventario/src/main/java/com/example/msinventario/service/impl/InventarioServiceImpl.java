@@ -1,5 +1,6 @@
 package com.example.msinventario.service.impl;
 
+import com.example.msinventario.dto.InventarioResponseDto;
 import com.example.msinventario.dto.ProductoDto;
 import com.example.msinventario.entity.Inventario;
 import com.example.msinventario.feing.ProductoFeing;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
@@ -20,8 +22,8 @@ public class InventarioServiceImpl implements InventarioService {
     private ProductoFeing productoFeing;
 
     @Override
-    public List<Inventario> listar() {
-        return inventarioRepository.findAll();
+    public List<InventarioResponseDto> listar() {
+        return inventarioRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -30,8 +32,9 @@ public class InventarioServiceImpl implements InventarioService {
     }
 
     @Override
-    public Inventario buscarPorId(Long id) {
-        return inventarioRepository.findById(id).orElse(null);
+    public InventarioResponseDto buscarPorId(Long id) {
+        Inventario inventario = inventarioRepository.findById(id).orElse(null);
+        return inventario != null ? mapToDto(inventario) : null;
     }
 
     @Override
@@ -51,13 +54,22 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     public ProductoDto buscarProductoPorId(Integer id) {
-        try {
-            ProductoDto producto = productoFeing.buscarPorId(id).getBody();
-            System.out.println("Producto obtenido: " + producto);
-            return producto;
-        } catch (Exception e) {
-            System.err.println("Error al obtener el producto: " + e.getMessage());
-            return null;
+        return productoFeing.buscarPorId(id).getBody();
+    }
+
+    private InventarioResponseDto mapToDto(Inventario inventario) {
+        InventarioResponseDto dto = new InventarioResponseDto();
+        dto.setId(inventario.getId());
+        dto.setAlmacenNombre(inventario.getAlmacenNombre());  // Asegúrate de que AlmacenNombre sea de tipo String
+        dto.setProductoId(inventario.getProductoId());
+        dto.setCantidadDisponible(inventario.getCantidadDisponible());
+        dto.setFechaActualizacion(inventario.getFechaActualizacion());
+
+        ProductoDto productoDto = buscarProductoPorId(inventario.getProductoId().intValue());
+        if (productoDto != null) {
+            dto.setProductoNombre(productoDto.getNombre());
         }
+
+        return dto;
     }
 }
